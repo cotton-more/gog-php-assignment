@@ -2,6 +2,7 @@
 
 
 use Doctrine\ORM\EntityManager;
+use GOG\CatalogBundle\Entity\Product;
 
 class ProductManager
 {
@@ -52,6 +53,21 @@ class ProductManager
     public function saveProduct($product)
     {
         $this->em->persist($product);
+        $this->em->flush();
+    }
+
+    /**
+     * @param $id
+     * @return null|Product
+     */
+    public function findById($id)
+    {
+        return $this->repository->find($id);
+    }
+
+    public function deleteProduct(Product $product)
+    {
+        $this->em->remove($product);
         $this->em->flush();
     }
 

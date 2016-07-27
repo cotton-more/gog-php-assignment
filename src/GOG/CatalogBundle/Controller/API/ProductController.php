@@ -7,6 +7,7 @@ use GOG\CatalogBundle\Form\ProductFormFactory;
 use GOG\CatalogBundle\Service\ProductPager;
 use GOG\CatalogBundle\Service\ProductManager;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProductController extends FOSRestController
 {
@@ -64,5 +65,14 @@ class ProductController extends FOSRestController
                 'message' => (string) $form->getErrors(true) ?: 'Invalid request',
             ], 400)
         );
+    }
+
+    public function deleteProductAction($id)
+    {
+        if ($product = $this->productManager->findById($id)) {
+            $this->productManager->deleteProduct($product);
+        }
+
+        return $this->handleView(View::create(null, Response::HTTP_NO_CONTENT));
     }
 }

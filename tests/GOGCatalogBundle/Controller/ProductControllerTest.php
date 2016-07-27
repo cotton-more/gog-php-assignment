@@ -85,4 +85,32 @@ class ProductControllerTest extends WebTestCase
 
         static::assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
+
+    /** @test */
+    public function it_should_create_and_delete()
+    {
+        $newProduct = [
+            'gog_catalog_product' => [
+                'title' => 'A brand new game',
+                'price' => mt_rand(1, 10),
+                'currency' => array_keys(Product::getCurrencyChoices())[mt_rand(0,3)],
+            ],
+        ];
+
+        $this->client->request(
+            'POST', '/api/v1/catalog/products', $newProduct
+        );
+
+        $response = $this->client->getResponse();
+        $responseData = json_decode($response->getContent(), true);
+
+        $this->client->request(
+            'DELETE',
+            '/api/v1/catalog/products/'.$responseData['id']
+        );
+
+        $response = $this->client->getResponse();
+
+        static::assertEquals(Response::HTTP_NO_CONTENT, $response->getStatusCode());
+    }
 }
