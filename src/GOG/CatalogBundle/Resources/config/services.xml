@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="gog_catalog.product_entity.class">GOG\CatalogBundle\Entity\Product</parameter>
+    </parameters>
+
+    <services>
+        <service id="gog_catalog.form_factory.product" class="GOG\CatalogBundle\Form\ProductFormFactory">
+            <argument type="service" id="form.factory" />
+            <argument>%gog_catalog.form.product.type%</argument>
+            <argument>%gog_catalog.form.product.name%</argument>
+        </service>
+
+        <service id="gog_catalog.form_type.product" class="GOG\CatalogBundle\Form\ProductType">
+            <argument>%gog_catalog.product_entity.class%</argument>
+            <tag name="form.type" />
+        </service>
+
+        <service id="gog_catalog.product_pager" class="GOG\CatalogBundle\Service\ProductPager" public="false" />
+
+        <service id="gog_catalog.product_manager" class="GOG\CatalogBundle\Service\ProductManager">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument>%gog_catalog.product_entity.class%</argument>
+        </service>
+
+        <service id="gog_catalog.controller.api_product" class="GOG\CatalogBundle\Controller\API\ProductController">
+            <call method="setContainer">
+                <argument type="service" id="service_container" />
+            </call>
+            <property name="productManager" type="service" id="gog_catalog.product_manager" />
+            <property name="productPager" type="service" id="gog_catalog.product_pager" />
+            <property name="productFormFactory" type="service" id="gog_catalog.form_factory.product" />
+        </service>
+    </services>
+</container>

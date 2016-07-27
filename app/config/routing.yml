@@ -1,0 +1,10 @@
+#gog_cart:
+#    type: rest
+#    resource: "@GOGCartBundle/Resources/config/routing.xml"
+#    prefix:   /api
+
+gog_catalog:
+    type: rest
+    resource: "@GOGCatalogBundle/Resources/config/routing.xml"
+    prefix:   /api
+
