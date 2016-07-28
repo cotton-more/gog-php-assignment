@@ -11,7 +11,7 @@ namespace GOG\CatalogBundle\Form;
 
 use Symfony\Component\Form\FormFactoryInterface;
 
-class ProductFormFactory
+class UpdateProductFormFactory
 {
     /**
      * @var FormFactoryInterface
@@ -48,7 +48,8 @@ class ProductFormFactory
         $builder = $this->formFactory->createNamedBuilder(
             $this->name,
             $this->type,
-            null
+            null,
+            [ 'method' => 'PATCH' ]
         );
 
         return $builder->getForm();

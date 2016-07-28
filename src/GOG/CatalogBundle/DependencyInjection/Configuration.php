@@ -29,6 +29,12 @@ class Configuration implements ConfigurationInterface
                                 ->scalarNode('name')->defaultValue('gog_catalog_product')->end()
                             ->end()
                         ->end()
+                        ->arrayNode('update_product')->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('type')->defaultValue('GOG\CatalogBundle\Form\UpdateProductType')->end()
+                                ->scalarNode('name')->defaultValue('gog_catalog_product')->end()
+                            ->end()
+                        ->end()
                     ->end()
                 ->end()
 

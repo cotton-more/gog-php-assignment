@@ -6,7 +6,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
-use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
  * This is the class that loads and manages your bundle configuration.
@@ -26,9 +25,10 @@ class GOGCatalogExtension extends Extension
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
 
-        $accessor = PropertyAccess::createPropertyAccessor();
+        $container->setParameter('gog_catalog.form.update_product.type', $config['form']['update_product']['type']);
+        $container->setParameter('gog_catalog.form.update_product.name', $config['form']['update_product']['name']);
 
-        $container->setParameter('gog_catalog.form.product.type', $accessor->getValue($config, '[form][product][type]'));
-        $container->setParameter('gog_catalog.form.product.name', $accessor->getValue($config, '[form][product][name]'));
+        $container->setParameter('gog_catalog.form.product.type', $config['form']['product']['type']);
+        $container->setParameter('gog_catalog.form.product.name', $config['form']['product']['name']);
     }
 }

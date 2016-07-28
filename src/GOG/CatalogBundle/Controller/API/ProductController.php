@@ -6,8 +6,10 @@ use FOS\RestBundle\View\View;
 use GOG\CatalogBundle\Form\ProductFormFactory;
 use GOG\CatalogBundle\Service\ProductPager;
 use GOG\CatalogBundle\Service\ProductManager;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ProductController extends FOSRestController
 {
@@ -20,11 +22,6 @@ class ProductController extends FOSRestController
      * @var ProductPager
      */
     public $productPager;
-
-    /**
-     * @var ProductFormFactory
-     */
-    public $productFormFactory;
 
     public function getProductsAction(Request $request)
     {
@@ -44,9 +41,8 @@ class ProductController extends FOSRestController
     {
         $product = $this->productManager->createProduct();
 
-        $form = $this->productFormFactory->createForm();
+        $form = $this->get('gog_catalog.form_factory.product')->createForm();
         $form->setData($product);
-
 
         $form->handleRequest($request);
 
@@ -74,5 +70,61 @@ class ProductController extends FOSRestController
         }
 
         return $this->handleView(View::create(null, Response::HTTP_NO_CONTENT));
+    }
+
+    public function patchProductAction(Request $request, $id)
+    {
+        $product = $this->productManager->findById($id);
+
+        if (null === $product) {
+            return $this->handleView($this->onProductNotFound($id));
+        }
+
+        $form = $this->get('gog_catalog.form_factory.update_product')->createForm();
+        $form->setData($product);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $this->productManager->saveProduct($product);
+
+            return $this->handleView($this->onPatchProductSuccess($form));
+        }
+
+        return $this->handleView($this->onPatchProductError($form));
+    }
+
+    /**
+     * @param $id
+     * @return View
+     */
+    private function onProductNotFound($id)
+    {
+        return View::create([
+            'error' => sprintf('Product %s not found', $id),
+            'code' => Response::HTTP_NOT_FOUND,
+        ], Response::HTTP_NOT_FOUND);
+    }
+
+    /**
+     * @param FormInterface $form
+     * @return View
+     */
+    private function onPatchProductError(FormInterface $form)
+    {
+        return View::create([
+            'code' => Response::HTTP_BAD_REQUEST,
+            'error' => $form->getErrors(),
+        ], Response::HTTP_BAD_REQUEST);
+    }
+
+    /**
+     * @param FormInterface $form
+     * @return View
+     */
+    private function onPatchProductSuccess(FormInterface $form)
+    {
+        return View::create([
+            'product' => $form->getData(),
+        ], Response::HTTP_OK);
     }
 }

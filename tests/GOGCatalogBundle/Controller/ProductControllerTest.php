@@ -29,6 +29,25 @@ class ProductControllerTest extends WebTestCase
     }
 
     /** @test */
+    public function it_should_patch_product()
+    {
+        $newProduct = [
+            'gog_catalog_product' => [
+                'title' => 'A brand new game',
+                'price' => mt_rand(1, 10),
+            ],
+        ];
+
+        $this->client->request(
+            'PATCH', '/api/v1/catalog/products/11', $newProduct
+        );
+
+        $response = $this->client->getResponse();
+
+        static::assertEquals(Response::HTTP_OK, $response->getStatusCode());
+    }
+
+    /** @test */
     public function it_should_get_products()
     {
         $this->client->request('GET', '/api/v1/catalog/products');

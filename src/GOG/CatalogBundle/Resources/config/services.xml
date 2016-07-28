@@ -15,7 +15,18 @@
             <argument>%gog_catalog.form.product.name%</argument>
         </service>
 
+        <service id="gog_catalog.form_factory.update_product" class="GOG\CatalogBundle\Form\UpdateProductFormFactory">
+            <argument type="service" id="form.factory" />
+            <argument>%gog_catalog.form.update_product.type%</argument>
+            <argument>%gog_catalog.form.update_product.name%</argument>
+        </service>
+
         <service id="gog_catalog.form_type.product" class="GOG\CatalogBundle\Form\ProductType">
+            <argument>%gog_catalog.product_entity.class%</argument>
+            <tag name="form.type" />
+        </service>
+
+        <service id="gog_catalog.form_type.update_product" class="GOG\CatalogBundle\Form\UpdateProductType">
             <argument>%gog_catalog.product_entity.class%</argument>
             <tag name="form.type" />
         </service>
@@ -33,7 +44,6 @@
             </call>
             <property name="productManager" type="service" id="gog_catalog.product_manager" />
             <property name="productPager" type="service" id="gog_catalog.product_pager" />
-            <property name="productFormFactory" type="service" id="gog_catalog.form_factory.product" />
         </service>
     </services>
 </container>
