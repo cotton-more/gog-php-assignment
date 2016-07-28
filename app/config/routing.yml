@@ -5,6 +5,6 @@
 
 gog_catalog:
     type: rest
-    resource: "@GOGCatalogBundle/Resources/config/routing.xml"
+    resource: "@GOGCatalogBundle/Resources/config/routing.yml"
     prefix:   /api
 
