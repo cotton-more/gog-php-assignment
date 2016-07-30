@@ -3,6 +3,7 @@
 namespace GOG\CatalogBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -25,21 +26,24 @@ class Product
     /**
      * @var string
      *
+     * @Serializer\Groups({"cart_api"})
      * @ORM\Column(name="title", type="string", length=255)
      * @Assert\NotBlank()
      */
     private $title;
 
     /**
-     * @var int
+     * @var float
      *
-     * @ORM\Column(name="price", type="integer")
+     * @Serializer\Groups({"cart_api"})
+     * @ORM\Column(name="price", type="decimal", precision=9, scale=2)
      */
     private $price;
 
     /**
      * @var string
      *
+     * @Serializer\Groups({"cart_api"})
      * @ORM\Column(name="currency", type="string", length=3)
      * @Assert\Choice(
      *     callback="getCurrencyChoices",
@@ -96,13 +100,13 @@ class Product
     /**
      * Set price
      *
-     * @param integer $price
+     * @param float $price
      *
      * @return Product
      */
     public function setPrice($price)
     {
-        $this->price = (int) ($price * 100);
+        $this->price = $price;
 
         return $this;
     }
@@ -114,7 +118,7 @@ class Product
      */
     public function getPrice()
     {
-        return  $this->price / 100;
+        return  $this->price;
     }
 
     /**
@@ -128,7 +132,7 @@ class Product
     /**
      * @param string $currency
      *
-     * @return $this
+     * @return Product
      */
     public function setCurrency($currency)
     {

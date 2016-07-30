@@ -34,6 +34,8 @@ class ProductController extends FOSRestController
             'result' => $result,
         ], 200);
 
+        $view->getContext()->addGroup('cart_api');
+
         return $this->handleView($view);
     }
 
@@ -49,16 +51,15 @@ class ProductController extends FOSRestController
         if ($form->isValid()) {
             $this->productManager->saveProduct($product);
 
-            $view = $this->view($product, 201);
+            $view = $this->onPostProductSuccess($form);
 
             return $this->handleView($view);
         }
 
         return $this->handleView(
             View::create([
-                'error' => true,
-                'code' => 400,
-                'message' => (string) $form->getErrors(true) ?: 'Invalid request',
+                'error' => trim($form->getErrors()) ?: 'Invalid request',
+                'code' => Response::HTTP_BAD_REQUEST,
             ], 400)
         );
     }
@@ -113,8 +114,19 @@ class ProductController extends FOSRestController
     {
         return View::create([
             'code' => Response::HTTP_BAD_REQUEST,
-            'error' => $form->getErrors(),
+            'error' => trim($form->getErrors()),
         ], Response::HTTP_BAD_REQUEST);
+    }
+
+    /**
+     * @param FormInterface $form
+     * @return View
+     */
+    private function onPostProductSuccess(FormInterface $form)
+    {
+        return View::create([
+            'product' => $form->getData(),
+        ], Response::HTTP_CREATED);
     }
 
     /**

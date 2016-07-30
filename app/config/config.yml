@@ -73,3 +73,6 @@ fos_rest:
     routing_loader:
         default_format: json
         include_format: false
+
+gog_cart:
+    cart_size: 5

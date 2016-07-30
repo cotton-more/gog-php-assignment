@@ -4,6 +4,11 @@ gog_cart_api:
     prefix: /cart
     name_prefix: gog_api_
 
+gog_api_get_cart:
+    path: /cart/{cartCode}
+    methods: [ GET ]
+    defaults: { _controller: gog_cart.controller.rest:getCartAction }
+
 gog_api_post_cart:
     path: /cart
     methods: [ POST ]

@@ -2,9 +2,13 @@
 
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use JMS\Serializer\Annotation as Serializer;
 
 class ProductPager
 {
+    /**
+     * @var int
+     */
     private $limit = 3;
 
     private $page = 0;
@@ -43,12 +47,30 @@ class ProductPager
         return $this;
     }
 
+    /**
+     * @return Paginator
+     */
     public function getPaginator()
     {
         return $this->paginator;
     }
 
     /**
+     * @Serializer\VirtualProperty()
+     * @Serializer\SerializedName("products")
+     * @Serializer\Groups({"cart_api"})
+     *
+     * @return \ArrayIterator|\Traversable
+     */
+    public function getIterator()
+    {
+        return $this->paginator->getIterator()->getArrayCopy();
+    }
+
+    /**
+     * @Serializer\VirtualProperty()
+     * @Serializer\Groups({"cart_api"})
+     *
      * @return mixed
      */
     public function getCurrentPage()
@@ -57,6 +79,9 @@ class ProductPager
     }
 
     /**
+     * @Serializer\VirtualProperty()
+     * @Serializer\Groups({"cart_api"})
+     *
      * @return int
      */
     public function getTotal()
@@ -65,9 +90,12 @@ class ProductPager
     }
 
     /**
+     * @Serializer\VirtualProperty()
+     * @Serializer\Groups({"cart_api"})
+     *
      * @return int
      */
-    public function getPageNumber()
+    public function getPages()
     {
         return ceil($this->paginator->count() / $this->limit);
     }

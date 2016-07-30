@@ -20,7 +20,7 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('gog_cart')
             ->children()
-                ->scalarNode('cart_size')->defaultValue(3)->end()
+                ->integerNode('cart_size')->defaultValue(3)->end()
             ->end();
 
         // Here you should define the parameters that are allowed to

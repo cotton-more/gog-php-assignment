@@ -27,6 +27,21 @@ class RestController extends FOSRestController
      */
     public $productManager;
 
+    public function getCartAction($cartCode)
+    {
+        if ($cart = $this->cartManager->getCartByCode($cartCode)) {
+            $view = View::create([
+                'cart' => $cart,
+            ], Response::HTTP_OK);
+
+            $view->getContext()->addGroup('cart_api');
+
+            return $this->handleView($view);
+        }
+
+        return $this->handleView($this->onCartNotFoundError($cartCode));
+    }
+
     public function postCartAction()
     {
         $manager = $this->cartManager;
