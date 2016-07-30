@@ -1,8 +1,2 @@
 # Learn more about services, parameters and containers at
 # http://symfony.com/doc/current/book/service_container.html
-
-services:
-    object_normalizer:
-        class: Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer
-        tags:
-            - { name: serializer.normalizer }
