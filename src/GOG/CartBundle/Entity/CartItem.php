@@ -213,6 +213,7 @@ class CartItem
 
     /**
      * @Serializer\VirtualProperty()
+     * @Serializer\SerializedName("title")
      * @Serializer\Groups({"cart_api"})
      *
      * @return string
