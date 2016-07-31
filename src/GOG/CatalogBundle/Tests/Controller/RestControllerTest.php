@@ -1,16 +1,10 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: inikulin
- * Date: 26/07/16
- * Time: 19:45
- */
-
-namespace tests\GOGCatalogBundle\Controller;
+<?php namespace tests\GOGCatalogBundle\Controller;
 
 
 
+use Doctrine\ORM\EntityManager;
 use GOG\CatalogBundle\Entity\Product;
+use GOG\CatalogBundle\Service\ProductManager;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,30 +15,60 @@ class RestControllerTest extends WebTestCase
     private $client;
 
     /**
-     *
+     * @var EntityManager
      */
+    private $em;
+
+    /**
+     * @var ProductManager
+     */
+    private $manager;
+
     public function setUp()
     {
+        static::bootKernel();
+
+        $this->em = static::$kernel->getContainer()->get('doctrine.orm.entity_manager');
+
         $this->client = static::createClient();
+
+        $this->manager = static::$kernel->getContainer()->get('gog_catalog.product_manager');
     }
 
     /** @test */
     public function it_should_patch_product()
     {
         $newProduct = [
-            'gog_catalog_product' => [
-                'title' => 'A brand new game',
-                'price' => mt_rand(1, 10),
-            ],
+            'title' => 'A brand new game',
+            'price' => mt_rand(1, 10),
+            'currency' => 'USD',
         ];
 
+        /** @var Product $product */
+        $product = $this->manager
+            ->createProduct()
+            ->setPrice($newProduct['price'])
+            ->setTitle($newProduct['title'])
+            ->setCurrency($newProduct['currency']);
+        $this->manager->saveProduct($product);
+
         $this->client->request(
-            'PATCH', '/api/v1/catalog/products/11', $newProduct
+            'PATCH', '/api/v1/catalog/products/'.$product->getId(), [
+                'gog_catalog_product' => [
+                    'price' => 20,
+                    'title' => 'The brand new game',
+                ]
+            ]
         );
 
         $response = $this->client->getResponse();
 
         static::assertEquals(Response::HTTP_OK, $response->getStatusCode());
+
+        $content = json_decode($response->getContent(), true);
+
+        static::assertNotEquals($newProduct['title'], $content['product']['title']);
+        static::assertNotEquals($newProduct['price'], $content['product']['price']);
     }
 
     /** @test */
@@ -60,9 +84,9 @@ class RestControllerTest extends WebTestCase
 
         static::assertCount(3, $data['result']['products']);
 
-        static::assertGreaterThan(0, $data['result']['current_page']);
+        static::assertGreaterThanOrEqual(1, $data['result']['current_page']);
 
-        static::assertGreaterThan(2, $data['result']['pages']);
+        static::assertGreaterThanOrEqual(2, $data['result']['pages']);
     }
     
     /** @test */
@@ -129,7 +153,6 @@ class RestControllerTest extends WebTestCase
         );
 
         $response = $this->client->getResponse();
-        dump($response->getContent());
 
         static::assertEquals(Response::HTTP_NO_CONTENT, $response->getStatusCode());
     }

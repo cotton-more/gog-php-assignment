@@ -37,7 +37,7 @@ class LoadProductData implements FixtureInterface
                 'currency' => 'USD',
             ],
             [
-                'title' => 'Icewind Dale',
+                'title' => 'Bloodburne',
                 'price' => 5.99,
                 'currency' => 'USD',
             ],
