@@ -15,7 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-class ProductControllerTest extends WebTestCase
+class RestControllerTest extends WebTestCase
 {
     /** @var  Client */
     private $client;
@@ -58,11 +58,11 @@ class ProductControllerTest extends WebTestCase
 
         $data = json_decode($response->getContent(), true);
 
-        static::assertCount(3, $data['result']['paginator']);
+        static::assertCount(3, $data['result']['products']);
 
-        static::assertGreaterThan(2, $data['result']['pageNumber']);
+        static::assertGreaterThan(0, $data['result']['current_page']);
 
-        static::assertGreaterThan(4, $data['result']['total']);
+        static::assertGreaterThan(2, $data['result']['pages']);
     }
     
     /** @test */
@@ -125,10 +125,11 @@ class ProductControllerTest extends WebTestCase
 
         $this->client->request(
             'DELETE',
-            '/api/v1/catalog/products/'.$responseData['id']
+            '/api/v1/catalog/products/'.$responseData['product']['id']
         );
 
         $response = $this->client->getResponse();
+        dump($response->getContent());
 
         static::assertEquals(Response::HTTP_NO_CONTENT, $response->getStatusCode());
     }

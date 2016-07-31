@@ -1,25 +1,19 @@
-gog_cart_api:
-    type: rest
-    resource: gog_cart.controller.rest
-    prefix: /cart
-    name_prefix: gog_api_
-
-gog_api_get_cart:
-    path: /cart/{cartCode}
+gog_api_cart_get_cart:
+    path: /{cartCode}
     methods: [ GET ]
     defaults: { _controller: gog_cart.controller.rest:getCartAction }
 
-gog_api_post_cart:
-    path: /cart
+gog_api_cart_post_cart:
+    path: /
     methods: [ POST ]
     defaults: { _controller: gog_cart.controller.rest:postCartAction }
 
-gog_api_put_cart_add_product:
-    path: /cart/{cartCode}/add
+gog_api_cart_put_cart_add_product:
+    path: /{cartCode}/add
     methods: [ PUT ]
     defaults: { _controller: gog_cart.controller.rest:putCartAddProductAction }
 
-gog_api_delete_cart_product:
-    path: /cart/{cartCode}/product/{productId}/delete
+gog_api_cart_delete_cart_product:
+    path: /{cartCode}/product/{productId}/delete
     methods: [ DELETE ]
     defaults: { _controller: gog_cart.controller.rest:deleteProductAction }

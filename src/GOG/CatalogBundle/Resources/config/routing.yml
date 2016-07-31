@@ -1,5 +1,4 @@
-gog_catalog_product_api:
+gog_api_catalog:
     type: rest
-    resource: gog_catalog.controller.api_product
-    prefix: /catalog
-    name_prefix: gog_api_
+    resource: gog_catalog.controller.rest
+    name_prefix: gog_api_catalog_

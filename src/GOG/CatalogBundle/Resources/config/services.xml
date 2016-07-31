@@ -38,7 +38,7 @@
             <argument>%gog_catalog.product_entity.class%</argument>
         </service>
 
-        <service id="gog_catalog.controller.api_product" class="GOG\CatalogBundle\Controller\API\ProductController">
+        <service id="gog_catalog.controller.rest" class="GOG\CatalogBundle\Controller\RestController">
             <call method="setContainer">
                 <argument type="service" id="service_container" />
             </call>

@@ -1,4 +1,4 @@
-<?php namespace GOG\CatalogBundle\Controller\API;
+<?php namespace GOG\CatalogBundle\Controller;
 
 
 use FOS\RestBundle\Controller\FOSRestController;
@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class ProductController extends FOSRestController
+class RestController extends FOSRestController
 {
     /**
      * @var ProductManager

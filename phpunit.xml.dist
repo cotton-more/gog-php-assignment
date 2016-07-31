@@ -16,6 +16,9 @@
         <testsuite name="Cart Bundle Test Suite">
             <directory>src/GOG/CartBundle/Tests</directory>
         </testsuite>
+        <testsuite name="Catalog Bundle Test Suite">
+            <directory>src/GOG/CatalogBundle/Tests</directory>
+        </testsuite>
         <testsuite name="Project Test Suite">
             <directory>tests</directory>
         </testsuite>

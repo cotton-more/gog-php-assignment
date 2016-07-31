@@ -1,9 +1,9 @@
 gog_catalog:
     type: rest
     resource: "@GOGCatalogBundle/Resources/config/routing.yml"
-    prefix:   /api/v1
+    prefix:   /api/v1/catalog
 
 gog_cart:
     type: rest
     resource: "@GOGCartBundle/Resources/config/routing.yml"
-    prefix:   /api/v1
+    prefix:   /api/v1/cart

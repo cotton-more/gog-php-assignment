@@ -27,7 +27,7 @@ class RestControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $client->request('POST', '/api/v1/cart');
+        $client->request('POST', '/api/v1/cart/');
         
         $response = $client->getResponse();
         
