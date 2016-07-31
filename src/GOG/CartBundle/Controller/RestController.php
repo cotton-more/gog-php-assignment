@@ -8,6 +8,7 @@ use GOG\CartBundle\CartManager;
 use GOG\CartBundle\Entity\Cart;
 use GOG\CatalogBundle\Entity\Product;
 use GOG\CatalogBundle\Service\ProductManager;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -27,6 +28,22 @@ class RestController extends FOSRestController
      */
     public $productManager;
 
+    /**
+     * @ApiDoc(
+     *     description="List all the products in the cart",
+     *     requirements={
+     *         {"name"="cartCode", "dataType"="string", "description"="Cart code"}
+     *     },
+     *     statusCodes={
+     *         200="Success",
+     *         404="Cart not found"
+     *     },
+     *     section="cart"
+     * )
+     *
+     * @param $cartCode
+     * @return Response
+     */
     public function getCartAction($cartCode)
     {
         if ($cart = $this->cartManager->getCartByCode($cartCode)) {
@@ -42,6 +59,16 @@ class RestController extends FOSRestController
         return $this->handleView($this->onCartNotFoundError($cartCode));
     }
 
+    /**
+     * @ApiDoc(
+     *     description="Create a cart",
+     *     statusCodes={
+     *      201="A cart was created"
+     *     },
+     *     section="cart"
+     * )
+     * @return Response
+     */
     public function postCartAction()
     {
         $manager = $this->cartManager;
@@ -52,6 +79,28 @@ class RestController extends FOSRestController
         return $this->handleView($this->onCreateCartSuccess($cart));
     }
 
+    /**
+     * @ApiDoc(
+     *     description="Add a product to the cart",
+     *     statusCodes={
+     *      201="A product was added to the cart",
+     *      400="An invalid request",
+     *      404="A product or a cart can not be found"
+     *     },
+     *     requirements={
+     *      {"name"="cartCode", "dataType"="string", "description"="Cart code"}
+     *     },
+     *     parameters={
+     *      {"name"="product_id", "required"=true, "dataType"="integer", "description"="A product id"},
+     *      {"name"="qty", "required"=false, "dataType"="integer", "description"="Product quantity. Default is 1"}
+     *     },
+     *     section="cart"
+     * )
+     *
+     * @param Request $request
+     * @param string $cartCode
+     * @return Response
+     */
     public function putCartAddProductAction(Request $request, $cartCode)
     {
         $cart = $this->cartManager->getCartByCode($cartCode);
@@ -75,6 +124,24 @@ class RestController extends FOSRestController
         return $this->handleView($this->onProductNotFoundError($productId));
     }
 
+    /**
+     * @ApiDoc(
+     *     description="Remove product from the cart",
+     *     tatusCodes={
+     *      200="A product was deleted",
+     *      404="A product or a cart can not be found"
+     *     },
+     *     requirements={
+     *      {"name"="cartCode", "dataType"="string", "description"="Cart code"},
+     *      {"name"="productId", "dataType"="integer", "description"="A product id"}
+     *     },
+     *     section="cart"
+     * )
+     *
+     * @param $cartCode
+     * @param $productId
+     * @return Response
+     */
     public function deleteProductAction($cartCode, $productId)
     {
         $cart = $this->cartManager->getCartByCode($cartCode);

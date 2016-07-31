@@ -6,6 +6,7 @@ use FOS\RestBundle\View\View;
 use GOG\CatalogBundle\Form\ProductFormFactory;
 use GOG\CatalogBundle\Service\ProductPager;
 use GOG\CatalogBundle\Service\ProductManager;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,6 +24,18 @@ class RestController extends FOSRestController
      */
     public $productPager;
 
+    /**
+     * @ApiDoc(
+     *     description="List all of the products",
+     *     statusCodes={
+     *      200="Success"
+     *     },
+     *     section="catalog"
+     * )
+     *
+     * @param Request $request
+     * @return Response
+     */
     public function getProductsAction(Request $request)
     {
         $page = $request->query->get('page', 0);
@@ -39,6 +52,23 @@ class RestController extends FOSRestController
         return $this->handleView($view);
     }
 
+    /**
+     * @ApiDoc(
+     *     description="Add a new product",
+     *     statusCodes={
+     *      201="A product was created",
+     *      400="Invalid reqiest",
+     *     },
+     *     parameters={
+     *      {"name"="gog_catalog_product[title]", "required"=false, "dataType"="string", "description"="A product title"},
+     *      {"name"="gog_catalog_product[price]", "required"=false, "dataType"="float", "description"="A product price"},
+     *      {"name"="gog_catalog_product[currency]", "required"=false, "dataType"="string", "description"="A product currency"},
+     *     },
+     *     section="catalog"
+     * )
+     * @param Request $request
+     * @return Response
+     */
     public function postProductAction(Request $request)
     {
         $product = $this->productManager->createProduct();
@@ -64,6 +94,21 @@ class RestController extends FOSRestController
         );
     }
 
+    /**
+     * @ApiDoc(
+     *     description="Remove a product",
+     *     statusCodes={
+     *      204="Success"
+     *     },
+     *     requirements={
+     *      {"name"="id", "dataType"="integer", "description"="A product id"}
+     *     },
+     *     section="catalog"
+     * )
+     *
+     * @param $id
+     * @return Response
+     */
     public function deleteProductAction($id)
     {
         if ($product = $this->productManager->findById($id)) {
@@ -73,6 +118,23 @@ class RestController extends FOSRestController
         return $this->handleView(View::create(null, Response::HTTP_NO_CONTENT));
     }
 
+    /**
+     * @ApiDoc(
+     *     description="Update product title and/or price",
+     *     requirements={
+     *      {"name"="id", "dataType"="integer", "description"="A product id"}
+     *     },
+     *     parameters={
+     *      {"name"="gog_catalog_product[title]", "required"=false, "dataType"="string", "description"="A product title"},
+     *      {"name"="gog_catalog_product[price]", "required"=false, "dataType"="float", "description"="A product price"},
+     *     },
+     *     section="catalog"
+     * )
+     *
+     * @param Request $request
+     * @param integer $id
+     * @return Response
+     */
     public function patchProductAction(Request $request, $id)
     {
         $product = $this->productManager->findById($id);

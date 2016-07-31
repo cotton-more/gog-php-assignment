@@ -76,3 +76,5 @@ fos_rest:
 
 gog_cart:
     cart_size: 5
+
+nelmio_api_doc: ~
