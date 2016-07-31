@@ -27,7 +27,9 @@ class Product
      * @var string
      *
      * @Serializer\Groups({"cart_api"})
+     *
      * @ORM\Column(name="title", type="string", length=255)
+     *
      * @Assert\NotBlank()
      */
     private $title;
@@ -36,7 +38,10 @@ class Product
      * @var float
      *
      * @Serializer\Groups({"cart_api"})
+     *
      * @ORM\Column(name="price", type="decimal", precision=9, scale=2)
+     *
+     * @Assert\GreaterThanOrEqual(0)
      */
     private $price;
 
@@ -44,7 +49,9 @@ class Product
      * @var string
      *
      * @Serializer\Groups({"cart_api"})
+     *
      * @ORM\Column(name="currency", type="string", length=3)
+     *
      * @Assert\Choice(
      *     callback="getCurrencyChoices",
      *     strict=true
